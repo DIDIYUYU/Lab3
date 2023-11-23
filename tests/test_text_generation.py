@@ -20,3 +20,14 @@ def test_text_generation(client):
     )
     assert response.status_code == 200
     assert response.json() == {'generated_text': test_data.GENERATED_TEXT_1}
+
+
+def test_text_generation_2(client):
+    response = client.post(
+        "/text-generation",
+        json={
+            'text': test_data.PREAMBLE_2,
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {'generated_text': test_data.GENERATED_TEXT_2}
