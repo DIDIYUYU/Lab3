@@ -1,0 +1,37 @@
+name: Run tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test_branch:
+    name: Run tests and linters in Docker container
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run:
+          pip install pip==23.2.1
+          pip install wheel==0.41.2
+          pip install -e .
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run:
+          pytest
